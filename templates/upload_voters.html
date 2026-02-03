@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="card-custom">
+  <h2 class="page-title">Upload Voter List (CSV)</h2>
+  <p>Only <strong>admin</strong> can upload the voter list.</p>
+  <p>CSV headers example: <code>name,email,roll_no</code></p>
+
+  <form method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label>Select CSV File</label>
+      <input class="form-control" type="file" name="file" accept=".csv" required>
+    </div>
+    <button class="btn btn-success">Upload</button>
+  </form>
+</div>
+{% endblock %}

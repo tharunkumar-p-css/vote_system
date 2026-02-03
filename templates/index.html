@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="card-custom">
+
+  <h2 class="page-title">Welcome, {{ user.name }}</h2>
+  <p style="color:#9ca3af;">
+    This is the Online Voting System dashboard.
+  </p>
+
+  <!-- ================= INFO CARDS ================= -->
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; margin-top:20px;">
+
+    <div style="background:#111827;padding:16px;border-radius:12px;">
+      <h4 style="color:#22c55e;">🗳 Public Elections</h4>
+      <p style="color:#9ca3af;font-size:14px;">
+        Open voting for registered users.
+      </p>
+    </div>
+
+    <div style="background:#111827;padding:16px;border-radius:12px;">
+      <h4 style="color:#38bdf8;">🏛 Government Elections</h4>
+      <p style="color:#9ca3af;font-size:14px;">
+        Official & restricted elections.
+      </p>
+    </div>
+
+    <div style="background:#111827;padding:16px;border-radius:12px;">
+      <h4 style="color:#facc15;">🔐 Secure Voting</h4>
+      <p style="color:#9ca3af;font-size:14px;">
+        OTP-based secure voting.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- ================= VOTING SECTION (ONLY FOR VOTERS) ================= -->
+  {% if user.role == "voter" %}
+  <hr style="margin:30px 0; border-color:#1f2937;">
+
+  <h3>🗳 Active Elections</h3>
+
+  {% if elections %}
+    {% for e in elections %}
+      <div style="
+        margin-top:15px;
+        padding:14px;
+        background:#0f172a;
+        border-radius:12px;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+      ">
+        <div>
+          <strong>{{ e.title }}</strong><br>
+          <small style="color:#9ca3af;">{{ e.description }}</small>
+        </div>
+
+        <a href="{{ url_for('request_otp', election_id=e.id) }}"
+           class="btn btn-primary btn-sm">
+          Request OTP
+        </a>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No active elections.</p>
+  {% endif %}
+
+  {% endif %}
+
+  <!-- ================= ADMIN NOTE ================= -->
+  {% if user.role in ["admin","officer"] %}
+  <div style="
+    margin-top:30px;
+    padding:14px;
+    background:#0f172a;
+    border-left:4px solid #22c55e;
+    border-radius:8px;
+  ">
+    <strong>Admin Panel:</strong><br>
+    Use the <b>Admin</b> menu to manage elections, candidates, and voters.
+  </div>
+  {% endif %}
+
+</div>
+
+{% endblock %}

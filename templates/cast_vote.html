@@ -1,0 +1,84 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="card-custom">
+
+  <h2 class="page-title">
+    Cast Vote – {{ election["title"] }}
+  </h2>
+
+  <!-- ================== VOTING FORM ================== -->
+  <form method="post" class="mb-4">
+
+    <div class="mb-3">
+      <label class="mb-2">Select Candidate</label>
+
+      {% for c in candidates %}
+      <div class="form-check mb-2">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="candidate_id"
+          id="candidate{{ c['id'] }}"
+          value="{{ c['id'] }}"
+          required
+        >
+
+        <label class="form-check-label" for="candidate{{ c['id'] }}">
+          <strong>{{ c["name"] }}</strong>
+
+          {# SHOW DEPARTMENT & YEAR ONLY FOR PUBLIC ELECTION #}
+          {% if election["election_type"] == "public" %}
+            <small class="text-muted">
+              ({{ c["department"] or "" }} {{ c["year"] or "" }})
+            </small>
+          {% endif %}
+        </label>
+      </div>
+      {% endfor %}
+    </div>
+
+    <button class="btn btn-success">
+      Submit Vote
+    </button>
+  </form>
+
+  <hr>
+
+  <!-- ================== CANDIDATE DETAILS ================== -->
+  <h5>Candidate Details</h5>
+
+  <div class="row mt-3">
+    {% for c in candidates %}
+    <div class="col-md-4 mb-3">
+      <div class="card-custom">
+
+        <h6>{{ c["name"] }}</h6>
+
+        {% if election["election_type"] == "public" %}
+          <p class="mb-1">
+            <small>{{ c["department"] or "" }} {{ c["year"] or "" }}</small>
+          </p>
+        {% endif %}
+
+        {% if c["description"] %}
+          <p class="mb-1">
+            <small>{{ c["description"] }}</small>
+          </p>
+        {% endif %}
+
+        {% if c["manifesto"] %}
+          <p class="mt-2">
+            <strong>Manifesto:</strong><br>
+            <small>{{ c["manifesto"] }}</small>
+          </p>
+        {% endif %}
+
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+
+{% endblock %}

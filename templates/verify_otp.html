@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="card-custom">
+  <h2 class="page-title">Verify OTP</h2>
+  <p>Enter the OTP sent to your email (for now, check console output).</p>
+  <form method="post">
+    <div class="mb-3">
+      <label>OTP</label>
+      <input class="form-control" name="otp" required>
+    </div>
+    <button class="btn btn-primary">Verify OTP</button>
+  </form>
+</div>
+{% endblock %}

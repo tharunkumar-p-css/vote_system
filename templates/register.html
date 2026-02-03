@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<!-- 🆕 AUTH WRAPPER (ADDED ONLY) -->
+<div class="auth-wrapper">
+
+  <!-- 🆕 AUTH CARD (ADDED ONLY) -->
+  <div class="card-custom auth-card">
+
+    <!-- 🆕 GOVERNMENT / SYSTEM SEAL -->
+    <div class="auth-avatar">
+      🏛️
+    </div>
+
+    <span class="gov-badge d-block text-center mb-2">
+      Government Election Demo
+    </span>
+
+    <!-- 🔽 YOUR OLD CONTENT (UNCHANGED) -->
+    <h2 class="page-title">Create Account</h2>
+
+    <form method="post">
+      <div class="mb-3">
+        <label>Name</label>
+        <input class="form-control" name="name" required>
+      </div>
+
+      <div class="mb-3">
+        <label>Email</label>
+        <input class="form-control" type="email" name="email" required>
+      </div>
+
+      <div class="mb-3">
+        <label>Password</label>
+        <input class="form-control" type="password" name="password" required>
+      </div>
+
+      <button class="btn btn-success w-100">
+        Register
+      </button>
+    </form>
+    <!-- 🔼 OLD CONTENT ENDS -->
+
+    <!-- 🆕 INFO MESSAGE -->
+    <p class="small text-muted mt-3 text-center">
+      Only users approved in the voter list can register.<br>
+      Contact admin for access.
+    </p>
+
+  </div>
+</div>
+
+{% endblock %}

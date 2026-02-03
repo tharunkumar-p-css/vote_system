@@ -1,0 +1,147 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div style="
+  display:flex;
+  justify-content:center;
+  margin-top:40px;
+">
+
+  <div style="
+    width:420px;
+    background:linear-gradient(145deg,#111827,#1f2937);
+    padding:26px;
+    border-radius:16px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.6);
+  ">
+
+    <h2 style="
+      color:#fff;
+      margin-bottom:6px;
+    ">
+      Create New Election
+    </h2>
+
+    <p style="
+      color:#9ca3af;
+      font-size:14px;
+      margin-bottom:20px;
+    ">
+      Fill the details carefully
+    </p>
+
+    <form method="post">
+
+      <!-- Title -->
+      <div style="margin-bottom:18px;">
+        <label style="color:#e5e7eb;font-size:14px;">
+          Election Title
+        </label>
+        <input
+          type="text"
+          name="title"
+          required
+          placeholder="Eg: Student Council Election 2025"
+          style="
+            width:100%;
+            margin-top:6px;
+            padding:10px;
+            border-radius:8px;
+            border:none;
+            outline:none;
+          "
+        >
+      </div>
+
+      <!-- Description -->
+      <div style="margin-bottom:18px;">
+        <label style="color:#e5e7eb;font-size:14px;">
+          Description
+        </label>
+        <textarea
+          name="description"
+          rows="3"
+          placeholder="Short description"
+          style="
+            width:100%;
+            margin-top:6px;
+            padding:10px;
+            border-radius:8px;
+            border:none;
+            outline:none;
+            resize:none;
+          "
+        ></textarea>
+      </div>
+
+      <!-- Election Type -->
+      <div style="margin-bottom:20px;">
+        <label style="color:#e5e7eb;font-size:14px;">
+          Election Type
+        </label>
+
+        <div style="margin-top:10px;">
+
+          <label style="
+            display:flex;
+            align-items:flex-start;
+            gap:10px;
+            background:#111827;
+            padding:10px;
+            border-radius:10px;
+            margin-bottom:10px;
+            cursor:pointer;
+          ">
+            <input type="radio" name="election_type" value="public" checked>
+            <div>
+              <strong style="color:#fff;">Public Election</strong><br>
+              <small style="color:#9ca3af;">
+                Open voting for all users
+              </small>
+            </div>
+          </label>
+
+          <label style="
+            display:flex;
+            align-items:flex-start;
+            gap:10px;
+            background:#111827;
+            padding:10px;
+            border-radius:10px;
+            cursor:pointer;
+          ">
+            <input type="radio" name="election_type" value="government">
+            <div>
+              <strong style="color:#fff;">Government Election</strong><br>
+              <small style="color:#9ca3af;">
+                Restricted & official election
+              </small>
+            </div>
+          </label>
+
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit"
+        style="
+          width:100%;
+          padding:12px;
+          background:#22c55e;
+          color:#000;
+          font-weight:bold;
+          border:none;
+          border-radius:10px;
+          cursor:pointer;
+        ">
+        Create Election
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="card-custom">
+
+  <h2 class="page-title">
+    Add Candidate to "{{ election['title'] }}"
+  </h2>
+
+  <form method="post">
+
+    <!-- Candidate Name -->
+    <div class="mb-3">
+      <label>Candidate Name</label>
+      <input class="form-control" name="name" required>
+    </div>
+
+    <!-- Short Description -->
+    <div class="mb-3">
+      <label>Short Description</label>
+      <textarea class="form-control" name="description" rows="2"></textarea>
+    </div>
+
+    <!-- 🔥 SHOW ONLY FOR PUBLIC ELECTION -->
+    {% if election['election_type'] == 'public' %}
+
+      <div class="mb-3">
+        <label>Department</label>
+        <input class="form-control" name="department" placeholder="CSE / IT / ECE">
+      </div>
+
+      <div class="mb-3">
+        <label>Year</label>
+        <input class="form-control" name="year" placeholder="Final Year / III Year">
+      </div>
+
+    {% endif %}
+    <!-- 🔥 END CONDITION -->
+
+    <!-- Manifesto -->
+    <div class="mb-3">
+      <label>
+        Manifesto (Why should voters vote for this candidate?)
+      </label>
+      <textarea class="form-control" name="manifesto" rows="4"></textarea>
+    </div>
+
+    <!-- Photo URL -->
+    <div class="mb-3">
+      <label>Photo URL (optional)</label>
+      <input
+        class="form-control"
+        name="photo_url"
+        placeholder="https://example.com/photo.jpg"
+      >
+    </div>
+
+    <!-- Submit -->
+    <button class="btn btn-success">
+      Add Candidate
+    </button>
+
+  </form>
+
+</div>
+
+{% endblock %}

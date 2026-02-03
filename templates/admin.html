@@ -1,0 +1,126 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="card-custom">
+
+  <h2 class="page-title">
+    {% if user.role == 'admin' %}
+      Admin Dashboard
+    {% else %}
+      Election Officer Dashboard
+    {% endif %}
+  </h2>
+
+  <!-- ACTION BUTTONS -->
+  <div style="margin-bottom:15px;">
+    {% if user.role == 'admin' %}
+      <a href="{{ url_for('upload_voter_list') }}" class="btn btn-secondary btn-sm">
+        Upload Voter List (CSV)
+      </a>
+    {% endif %}
+
+    <a href="{{ url_for('create_election') }}" class="btn btn-success btn-sm">
+      Create New Election
+    </a>
+  </div>
+
+  <!-- ================= PUBLIC ELECTIONS ================= -->
+  <h4 style="margin-top:20px;">Public Elections</h4>
+
+  {% if public_elections %}
+    {% for e in public_elections %}
+      <div style="
+        padding:12px;
+        background:#111827;
+        border-radius:10px;
+        margin-bottom:10px;
+      ">
+        <strong>{{ e.title }}</strong><br>
+        <small>{{ e.description }}</small>
+
+        <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
+          <a href="{{ url_for('add_candidate', election_id=e.id) }}"
+             class="btn btn-secondary btn-sm">
+            Add Candidate
+          </a>
+
+          <a href="{{ url_for('view_results', election_id=e.id) }}"
+             class="btn btn-primary btn-sm">
+            View Results
+          </a>
+
+          <a href="{{ url_for('export_summary', election_id=e.id) }}"
+             class="btn btn-outline btn-sm">
+            Export Summary
+          </a>
+
+          <a href="{{ url_for('export_votes', election_id=e.id) }}"
+             class="btn btn-outline btn-sm">
+            Export Votes
+          </a>
+
+          {% if user.role == 'admin' %}
+            <a href="{{ url_for('delete_election', election_id=e.id) }}"
+               class="btn btn-danger btn-sm"
+               onclick="return confirm('Delete this election?')">
+              Delete
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No public elections found.</p>
+  {% endif %}
+
+  <!-- ================= GOVERNMENT ELECTIONS ================= -->
+  <h4 style="margin-top:25px;">Government Elections</h4>
+
+  {% if government_elections %}
+    {% for e in government_elections %}
+      <div style="
+        padding:12px;
+        background:#111827;
+        border-radius:10px;
+        margin-bottom:10px;
+      ">
+        <strong>{{ e.title }}</strong><br>
+        <small>{{ e.description }}</small>
+
+        <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
+          <a href="{{ url_for('add_candidate', election_id=e.id) }}"
+             class="btn btn-secondary btn-sm">
+            Add Candidate
+          </a>
+
+          <a href="{{ url_for('view_results', election_id=e.id) }}"
+             class="btn btn-primary btn-sm">
+            View Results
+          </a>
+
+          <a href="{{ url_for('export_summary', election_id=e.id) }}"
+             class="btn btn-outline btn-sm">
+            Export Summary
+          </a>
+
+          <a href="{{ url_for('export_votes', election_id=e.id) }}"
+             class="btn btn-outline btn-sm">
+            Export Votes
+          </a>
+
+          {% if user.role == 'admin' %}
+            <a href="{{ url_for('delete_election', election_id=e.id) }}"
+               class="btn btn-danger btn-sm"
+               onclick="return confirm('Delete this election?')">
+              Delete
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No government elections found.</p>
+  {% endif %}
+
+</div>
+{% endblock %}

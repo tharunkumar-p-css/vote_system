@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="card-custom">
+  <h2 class="page-title">{{ candidate["name"] }}</h2>
+  <p><strong>Election:</strong> {{ candidate["election_title"] }}</p>
+
+  {% if candidate["photo_url"] %}
+  <div class="mb-3">
+    <img src="{{ candidate['photo_url'] }}" alt="Candidate Photo"
+         style="max-width: 200px; border-radius: 12px;">
+  </div>
+  {% endif %}
+
+  <p><strong>Department:</strong> {{ candidate["department"] or "N/A" }}</p>
+  <p><strong>Year:</strong> {{ candidate["year"] or "N/A" }}</p>
+
+  <p><strong>Short Description:</strong><br>
+    {{ candidate["description"] or "No description." }}
+  </p>
+
+  <p><strong>Manifesto:</strong><br>
+    {{ candidate["manifesto"] or "Manifesto not provided." }}
+  </p>
+
+  <a href="{{ url_for('index') }}" class="btn btn-secondary btn-sm mt-3">Back to Home</a>
+</div>
+{% endblock %}

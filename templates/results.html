@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="card-custom">
+  <h2 class="page-title">Results - {{ election["title"] }}</h2>
+
+  <table class="table table-bordered mt-3">
+    <thead>
+      <tr>
+        <th>Candidate</th>
+        <th>Votes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in candidates %}
+      <tr>
+        <td>{{ c["name"] }}</td>
+        <td>{{ c["votes"] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h5 class="mt-4">Graphical View</h5>
+  <canvas id="resultsChart" style="max-height: 300px;"></canvas>
+
+  <div class="mt-3">
+    <a href="{{ url_for('export_summary', election_id=election['id']) }}" class="btn btn-secondary btn-sm">
+      Export Summary
+    </a>
+    <a href="{{ url_for('export_votes', election_id=election['id']) }}" class="btn btn-secondary btn-sm">
+      Export Detailed Votes
+    </a>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const labels = {{ candidates | map(attribute='name') | list | tojson }};
+  const votes = {{ candidates | map(attribute='votes') | list | tojson }};
+
+  const ctx = document.getElementById('resultsChart');
+  const chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Votes',
+        data: votes
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            precision: 0
+          }
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

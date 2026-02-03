@@ -1,0 +1,239 @@
+/* ================= ROOT & BODY ================= */
+
+:root {
+    --bg-main: #0f172a;
+    --bg-card: #020617;
+    --border-soft: #1e293b;
+    --text-main: #e5e7eb;
+    --text-muted: #94a3b8;
+    --accent-blue: #38bdf8;
+    --accent-green: #22c55e;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: radial-gradient(circle at top, #0f172a, #020617);
+    color: var(--text-main);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    min-height: 100vh;
+    animation: fadeIn 0.8s ease;
+}
+
+/* ================= NAVBAR ================= */
+
+.navbar-custom {
+    background: rgba(2, 6, 23, 0.9);
+    backdrop-filter: blur(8px);
+    border-radius: 16px;
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 20px 25px -20px rgba(0,0,0,0.8);
+    animation: slideDown 0.6s ease;
+}
+
+.navbar-custom a {
+    color: var(--text-main);
+    text-decoration: none;
+    margin-right: 15px;
+    font-weight: 500;
+    position: relative;
+}
+
+.navbar-custom a::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: var(--accent-blue);
+    left: 0;
+    bottom: -4px;
+    transition: width 0.3s ease;
+}
+
+.navbar-custom a:hover::after {
+    width: 100%;
+}
+
+/* ================= CARDS ================= */
+
+.card-custom {
+    background: linear-gradient(180deg, #020617, #020617cc);
+    border-radius: 16px;
+    border: 1px solid var(--border-soft);
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 18px 30px -24px rgba(15,23,42,0.8);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeUp 0.5s ease;
+}
+
+.card-custom:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 40px -20px rgba(56,189,248,0.25);
+}
+
+/* ================= BUTTONS ================= */
+
+.btn-primary {
+    background: linear-gradient(to right, #2563eb, #06b6d4);
+    border: none;
+    border-radius: 999px;
+    padding: 8px 18px;
+    color: white;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(37,99,235,0.4);
+}
+
+.btn-success {
+    background: linear-gradient(to right, #16a34a, #22c55e);
+    border: none;
+    border-radius: 999px;
+    padding: 8px 18px;
+    color: white;
+}
+
+.btn-secondary {
+    background: #1f2937;
+    border: none;
+    border-radius: 999px;
+    padding: 6px 14px;
+    color: var(--text-main);
+}
+
+.btn-danger {
+    background: linear-gradient(to right, #dc2626, #ef4444);
+    border: none;
+    border-radius: 999px;
+    padding: 6px 14px;
+    color: white;
+}
+
+/* ================= HEADINGS ================= */
+
+.page-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    letter-spacing: 0.5px;
+}
+
+/* ================= FORMS ================= */
+
+label {
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.form-control,
+.form-select,
+textarea {
+    background: var(--bg-card) !important;
+    border-radius: 12px !important;
+    border: 1px solid var(--border-soft) !important;
+    color: var(--text-main) !important;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus,
+textarea:focus {
+    box-shadow: 0 0 0 1px var(--accent-blue);
+}
+
+/* ================= LIST & TABLE ================= */
+
+.list-group-item {
+    background: var(--bg-card);
+    border-color: var(--border-soft);
+    color: var(--text-main);
+    transition: background 0.3s ease;
+}
+
+.list-group-item:hover {
+    background: #020617f0;
+}
+
+.table {
+    color: var(--text-main);
+}
+
+.table thead {
+    background: var(--bg-card);
+}
+
+/* ================= AUTH (LOGIN / REGISTER / OTP) ================= */
+
+.auth-wrapper {
+    min-height: calc(100vh - 120px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-card {
+    max-width: 380px;
+    width: 100%;
+    padding: 28px;
+}
+
+.auth-avatar {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2563eb, #06b6d4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: white;
+    box-shadow: 0 10px 30px rgba(37,99,235,0.35);
+}
+
+/* ================= GOVERNMENT DEMO ================= */
+
+.gov-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    color: white;
+    margin-left: 6px;
+}
+
+/* ================= ANIMATIONS ================= */
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
