@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="card-custom text-center">
+    <h2 class="page-title">Face Verification</h2>
+    <p>Please scan your face to continue voting.</p>
+
+    <video id="video" width="300" height="220" autoplay
+        style="border-radius:15px; margin-bottom:15px;"></video>
+
+    <form method="POST">
+        <input type="hidden" name="image_data" id="image_data">
+        <button type="button" class="btn btn-primary" onclick="capture()">
+            Scan Face
+        </button>
+    </form>
+</div>
+
+<script>
+const video = document.getElementById("video");
+
+// Start Camera
+navigator.mediaDevices.getUserMedia({ video: true })
+    .then(stream => {
+        video.srcObject = stream;
+    })
+    .catch(err => {
+        alert("Camera access denied!");
+    });
+
+function capture() {
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(video, 0, 0);
+
+    const imageData = canvas.toDataURL("image/jpeg");
+    document.getElementById("image_data").value = imageData;
+
+    document.querySelector("form").submit();
+}
+</script>
+
+{% endblock %}

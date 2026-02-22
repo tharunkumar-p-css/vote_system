@@ -12,6 +12,17 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- =========================
+-- FACE DATA (Face Scan Storage)
+-- =========================
+CREATE TABLE IF NOT EXISTS face_data (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER UNIQUE NOT NULL,
+  face_embedding TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- =========================
 -- ELECTIONS
 -- =========================
 CREATE TABLE IF NOT EXISTS elections (

@@ -1,6 +1,12 @@
 print("TEST: app.py is running")
 import sqlite3
 import os
+import base64
+import json
+import numpy as np
+import cv2
+from deepface import DeepFace
+
 from flask import (
     Flask, render_template, request, redirect,
     url_for, flash, session, g
@@ -72,6 +78,32 @@ def require_role(roles):
         flash("Access denied.")
         return None
     return user
+
+def extract_face_embedding(image_bgr):
+    """
+    Returns face embedding list using DeepFace.
+    """
+    try:
+        result = DeepFace.represent(
+            img_path=image_bgr,
+            model_name="Facenet",
+            enforce_detection=False
+        )
+        return result[0]["embedding"]
+    except Exception as e:
+        print("FACE ERROR:", e)
+        return None
+
+
+def compare_embeddings(emb1, emb2, threshold=10.0):
+    """
+    Returns True if face matches.
+    """
+    emb1 = np.array(emb1, dtype="float32")
+    emb2 = np.array(emb2, dtype="float32")
+    dist = np.linalg.norm(emb1 - emb2)
+    print("FACE DISTANCE:", dist)
+    return dist < threshold
 
 # ----------------- ROUTES -----------------
 
@@ -440,6 +472,8 @@ def verify_otp_page(election_id):
             flash("Invalid OTP.")
             return redirect(url_for("verify_otp_page", election_id=election_id))
 
+
+
         execute_db(
             "UPDATE otps SET used = 1 WHERE id = ?",
             (otp_row["id"],)
@@ -447,7 +481,8 @@ def verify_otp_page(election_id):
 
         session[f"otp_valid_election_{election_id}"] = True
         flash("OTP verified successfully.")
-        return redirect(url_for("cast_vote", election_id=election_id))
+        return redirect(url_for("face_scan", election_id=election_id))
+
 
     return render_template(
         "verify_otp.html",
@@ -464,6 +499,10 @@ def cast_vote(election_id):
     if not session.get(f"otp_valid_election_{election_id}"):
         flash("OTP verification required before voting.")
         return redirect(url_for("index"))
+    if not session.get(f"face_verified_election_{election_id}"):
+        flash("Face scan required before voting.")
+        return redirect(url_for("face_scan", election_id=election_id))
+
 
     election = query_db(
         "SELECT * FROM elections WHERE id = ?",
@@ -497,9 +536,11 @@ def cast_vote(election_id):
         )
 
         session.pop(f"otp_valid_election_{election_id}", None)
+        session.pop(f"face_verified_election_{election_id}", None)
         flash("Your vote has been recorded successfully.")
         return redirect(url_for("index"))
 
+        
     candidates = query_db(
         "SELECT * FROM candidates WHERE election_id = ?",
         (election_id,)
@@ -511,6 +552,78 @@ def cast_vote(election_id):
         election=election,
         candidates=candidates
     )
+@app.route("/vote/<int:election_id>/face_scan", methods=["GET", "POST"])
+def face_scan(election_id):
+    user = require_role(("voter",))
+    if not user:
+        return redirect(url_for("login"))
+
+    # OTP must be verified
+    if not session.get(f"otp_valid_election_{election_id}"):
+        flash("OTP verification required before face scan.")
+        return redirect(url_for("index"))
+
+    if request.method == "POST":
+        image_data = request.form.get("image_data")
+
+        if not image_data:
+            flash("Face image not captured.")
+            return redirect(url_for("face_scan", election_id=election_id))
+
+        # Decode base64 image
+        header, encoded = image_data.split(",", 1)
+        img_bytes = base64.b64decode(encoded)
+
+        np_arr = np.frombuffer(img_bytes, np.uint8)
+        img_bgr = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+
+        if img_bgr is None:
+            flash("Invalid image data.")
+            return redirect(url_for("face_scan", election_id=election_id))
+
+        embedding = extract_face_embedding(img_bgr)
+
+        if not embedding:
+            flash("No face detected. Try again clearly.")
+            return redirect(url_for("face_scan", election_id=election_id))
+
+        # Check if user already has face stored
+        face_row = query_db(
+            "SELECT * FROM face_data WHERE user_id=?",
+            (user["id"],),
+            one=True
+        )
+
+        if not face_row:
+            # Check if this face already belongs to another user
+            all_faces = query_db("SELECT * FROM face_data")
+
+            for f in all_faces:
+                stored_embedding = json.loads(f["face_embedding"])
+                if compare_embeddings(embedding, stored_embedding):
+                    flash("❌ Face already registered with another voter. Vote blocked.")
+                    return redirect(url_for("index"))
+
+            # Save face for this user
+            execute_db(
+                "INSERT INTO face_data (user_id, face_embedding) VALUES (?, ?)",
+                (user["id"], json.dumps(embedding))
+            )
+            flash("✅ Face registered successfully.")
+        else:
+            stored_embedding = json.loads(face_row["face_embedding"])
+            if not compare_embeddings(embedding, stored_embedding):
+                flash("❌ Face mismatch. Voting blocked.")
+                return redirect(url_for("index"))
+
+            flash("✅ Face verified successfully.")
+
+        # Allow voting
+        session[f"face_verified_election_{election_id}"] = True
+        return redirect(url_for("cast_vote", election_id=election_id))
+
+    return render_template("face_scan.html", user=user, election_id=election_id)
+
 def create_default_admin():
     admin_email = "admin@gmail.com"
     admin_password = "admin123"
@@ -532,7 +645,13 @@ def create_default_admin():
 # ----------------- MAIN -----------------
 if __name__ == "__main__":
     print("Starting Flask app...")
+
     if not os.path.exists(DB_PATH):
         print("⚠️  Database not found. Initializing...")
         init_db()
+
+    # ✅ Always ensure admin exists
+    with app.app_context():
+        create_default_admin()
+
     app.run(debug=True)
